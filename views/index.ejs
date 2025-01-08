@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedTicket 2.0</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #007bff;
+            font-size: 36px;
+            margin: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #555;
+        }
+
+        input,
+        select,
+        textarea,
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        select {
+            appearance: none;
+            background-color: #fff;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 16px;
+        }
+
+        select::-ms-expand {
+            display: none;
+        }
+    </style>
+    <script>
+        function updateDepartment() {
+            const internalNumber = document.getElementById('internal_number').value;
+            const departments = JSON.parse(document.getElementById('departments-data').value);
+            const department = departments.find(dep => dep.internal_number === internalNumber);
+            if (department) {
+                document.getElementById('department').value = department.department;
+            } else {
+                document.getElementById('department').value = '';
+            }
+        }
+
+        function updateCategories() {
+            const section = document.getElementById('section').value;
+            const categories = JSON.parse(document.getElementById('categories-data').value);
+            const filteredCategories = categories.filter(cat => cat.section === section);
+            const categorySelect = document.getElementById('category');
+            categorySelect.innerHTML = '';
+            filteredCategories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat.category;
+                option.textContent = cat.category;
+                categorySelect.appendChild(option);
+            });
+        }
+
+        function populateSections() {
+            const sections = JSON.parse(document.getElementById('sections-data').value);
+            const sectionSelect = document.getElementById('section');
+            sections.forEach(section => {
+                const option = document.createElement('option');
+                option.value = section;
+                option.textContent = section;
+                sectionSelect.appendChild(option);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', populateSections);
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+
+        </div>
+        <h1>Zgłoś problem</h1>
+        <form action="/tickets" method="POST">
+            <label for="name">Imię i nazwisko:</label>
+            <input type="text" id="name" name="name" required>
+            <br>
+            <label for="title">Tytuł:</label>
+            <input type="text" id="title" name="title" required>
+            <br>
+            <label for="description">Opis:</label>
+            <textarea id="description" name="description" required></textarea>
+            <br>
+            <label for="internal_number">Numer wewnętrzny:</label>
+            <input type="text" id="internal_number" name="internal_number" oninput="updateDepartment()" required>
+            <br>
+            <label for="department">Dział:</label>
+            <input type="text" id="department" name="department" required>
+            <br>
+            <label for="section">Sekcja:</label>
+            <select id="section" name="section" onchange="updateCategories()" required>
+                <option value="">Wybierz sekcję</option>
+                <!-- Sekcje będą dynamicznie dodawane przez JavaScript -->
+            </select>
+            <br>
+            <label for="category">Kategoria:</label>
+            <select id="category" name="category" required>
+                <!-- Kategorie będą dynamicznie dodawane przez JavaScript -->
+            </select>
+            <br>
+            <label for="priority">Priorytet zgłoszenia:</label>
+            <select id="priority" name="priority" required>
+                <option value="low">Niski</option>
+                <option value="medium">Średni</option>
+                <option value="high">Wysoki</option>
+            </select>
+            <br>
+            <label for="recurrence">Powtarzalność zgłoszenia:</label>
+            <select id="recurrence" name="recurrence" required>
+                <option value="once">Jednorazowe</option>
+                <option value="recurring">Powtarzalne</option>
+            </select>
+            <br>
+            <button type="submit">Zgłoś</button>
+        </form>
+        <textarea id="departments-data" style="display:none;"><%= JSON.stringify(departments) %></textarea>
+        <textarea id="categories-data" style="display:none;"><%= JSON.stringify(categories) %></textarea>
+        <textarea id="sections-data"
+            style="display:none;"><%= JSON.stringify([...new Set(categories.map(cat => cat.section))]) %></textarea>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Importuj bibliotekę kontaktów - MedTicket 2.0</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input[type="file"] {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .delete-button {
+            background-color: #f44336;
+            margin-left: 10px;
+        }
+
+        .delete-button:hover {
+            background-color: #e53935;
+        }
+
+        .history {
+            margin-top: 30px;
+        }
+
+        .history h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .history ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .history li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Importuj bibliotekę kontaktów</h1>
+        <form action="/admin/upload" method="POST" enctype="multipart/form-data">
+            <label for="file">Wybierz plik CSV:</label>
+            <input type="file" name="file" id="file" required>
+            <button type="submit">Importuj</button>
+        </form>
+        <h2>Zaimportowane pliki</h2>
+        <ul>
+            <% files.contacts.forEach(function(file) { %>
+                <li>
+                    <%= file %>
+                        <form action="/admin/delete" method="POST" style="display:inline;">
+                            <input type="hidden" name="filename" value="<%= file %>">
+                            <button type="submit" class="delete-button">Usuń</button>
+                        </form>
+                </li>
+                <% }); %>
+        </ul>
+
+        <h1>Importuj sekcje i kategorie</h1>
+        <form action="/admin/upload-categories" method="POST" enctype="multipart/form-data">
+            <label for="file">Wybierz plik CSV:</label>
+            <input type="file" name="file" id="file" required>
+            <button type="submit">Importuj</button>
+        </form>
+        <h2>Zaimportowane pliki</h2>
+        <ul>
+            <% files.categories.forEach(function(file) { %>
+                <li>
+                    <%= file %>
+                        <form action="/admin/delete-categories" method="POST" style="display:inline;">
+                            <input type="hidden" name="filename" value="<%= file %>">
+                            <button type="submit" class="delete-button">Usuń</button>
+                        </form>
+                </li>
+                <% }); %>
+        </ul>
+
+        <div class="history">
+            <h2>Historia importów</h2>
+            <ul>
+                <% history.forEach(function(entry) { %>
+                    <li>
+                        <%= entry.filename %> - <%= entry.date.toLocaleString() %>
+                    </li>
+                    <% }); %>
+            </ul>
+        </div>
+    </div>
+</body>
+
+</html>

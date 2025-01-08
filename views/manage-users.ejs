@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zarządzaj użytkownikami - MedTicket 2.0</title>
+</head>
+
+<body>
+    <h1>Zarządzaj użytkownikami</h1>
+    <ul>
+        <% users.forEach(function(user) { %>
+            <li>
+                <%= user.username %>
+                    <form action="/admin/delete-user" method="POST" style="display:inline;">
+                        <input type="hidden" name="userId" value="<%= user._id %>">
+                        <button type="submit">Usuń</button>
+                    </form>
+                    <br>
+                    <strong>Uprawnienia:</strong>
+                    <ul>
+                        <% user.permissions.forEach(function(permission) { %>
+                            <li>
+                                <%= permission %>
+                                    <form action="/admin/remove-permission" method="POST" style="display:inline;">
+                                        <input type="hidden" name="userId" value="<%= user._id %>">
+                                        <input type="hidden" name="permission" value="<%= permission %>">
+                                        <button type="submit">Usuń</button>
+                                    </form>
+                            </li>
+                            <% }); %>
+                    </ul>
+                    <form action="/admin/add-permission" method="POST">
+                        <input type="hidden" name="userId" value="<%= user._id %>">
+                        <label for="permission">Dodaj uprawnienie:</label>
+                        <select name="permission" id="permission">
+                            <option value="super administrator">Super Administrator</option>
+                            <option value="administrator">Administrator</option>
+                            <option value="obserwator">Obserwator</option>
+                            <option value="sekcja informatyczna">Sekcja Informatyczna</option>
+                            <option value="sekcja elektryczna">Sekcja Elektryczna</option>
+                            <option value="aparatura medyczna">Aparatura Medyczna</option>
+                            <option value="cyberbezpieczeństwo">Cyberbezpieczeństwo</option>
+                            <option value="sekcja budowlana">Sekcja Budowlana</option>
+                        </select>
+                        <button type="submit">Dodaj</button>
+                    </form>
+            </li>
+            <% }); %>
+    </ul>
+</body>
+
+</html>

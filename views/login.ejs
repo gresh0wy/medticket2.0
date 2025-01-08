@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logowanie - MedTicket 2.0</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 50px auto;
+            display: flex;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .left,
+        .right {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .left {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h1 {
+            color: #007bff;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-top: 10px;
+            color: #555;
+        }
+
+        input {
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .right {
+            background-color: #e9ecef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .right img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="left">
+            <h1>Logowanie</h1>
+            <form action="/login" method="POST">
+                <label for="username">Nazwa użytkownika:</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="password">Hasło:</label>
+                <input type="password" id="password" name="password" required>
+
+                <button type="submit">Zaloguj</button>
+            </form>
+        </div>
+        <div class="right">
+            <!-- Miejsce na grafikę -->
+            <img src="path/to/your/image.jpg" alt="Grafika">
+        </div>
+    </div>
+</body>
+
+</html>

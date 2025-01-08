@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= section %> - MedTicket 2.0
+    </title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #007bff;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .truncate {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+
+        .details-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+
+        .details-button:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+
+            th,
+            td {
+                padding: 5px;
+            }
+
+            .truncate {
+                max-width: 100px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>
+            <%= section %>
+        </h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Priorytet</th>
+                    <th>Imię zgłaszającego</th>
+                    <th>Temat</th>
+                    <th>Opis</th>
+                    <th>Pracownik przypisany</th>
+                    <th>Szczegóły</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% tickets.forEach(function(ticket) { %>
+                    <tr>
+                        <td>
+                            <%= ticket.priority %>
+                        </td>
+                        <td>
+                            <%= ticket.name %>
+                        </td>
+                        <td>
+                            <%= ticket.title %>
+                        </td>
+                        <td class="truncate">
+                            <%= ticket.description.length> 100 ? ticket.description.substring(0, 100) + '...' :
+                                ticket.description %>
+                        </td>
+                        <td>
+                            <%= ticket.assigned_to ? ticket.assigned_to : 'Nie przypisano' %>
+                        </td>
+                        <td><a href="/tickets/<%= ticket._id %>" class="details-button">Szczegóły</a></td>
+                    </tr>
+                    <% }); %>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Szczegóły zgłoszenia - MedTicket 2.0</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #007bff;
+            text-align: center;
+        }
+
+        .details {
+            margin-top: 20px;
+        }
+
+        .details p {
+            margin: 10px 0;
+        }
+
+        .details label {
+            display: block;
+            margin-top: 10px;
+            color: #555;
+        }
+
+        .details select,
+        .details button,
+        .details textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .details button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .details button:hover {
+            background-color: #0056b3;
+        }
+
+        .comments {
+            margin-top: 30px;
+        }
+
+        .comments h2 {
+            color: #007bff;
+        }
+
+        .comments .comment {
+            background-color: #e9ecef;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .history {
+            margin-top: 30px;
+        }
+
+        .history h2 {
+            color: #007bff;
+        }
+
+        .history .entry {
+            background-color: #e9ecef;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Szczegóły zgłoszenia</h1>
+        <div class="details">
+            <p><strong>Imię zgłaszającego:</strong>
+                <%= ticket.name %>
+            </p>
+            <p><strong>Temat:</strong>
+                <%= ticket.title %>
+            </p>
+            <p><strong>Opis:</strong>
+                <%= ticket.description %>
+            </p>
+            <p><strong>Priorytet:</strong>
+                <%= ticket.priority %>
+            </p>
+            <p><strong>Status:</strong>
+                <%= ticket.status %>
+            </p>
+            <p><strong>Data utworzenia:</strong>
+                <%= ticket.created_at.toLocaleString() %>
+            </p>
+            <form action="/tickets/<%= ticket._id %>/assign" method="POST">
+                <label for="assigned_to">Przypisz pracownika:</label>
+                <select id="assigned_to" name="assigned_to" required>
+                    <option value="">Wybierz pracownika</option>
+                    <% users.forEach(function(user) { %>
+                        <option value="<%= user.username %>" <%=ticket.assigned_to===user.username ? 'selected' : '' %>>
+                            <%= user.username %>
+                        </option>
+                        <% }); %>
+                </select>
+                <button type="submit">Przypisz</button>
+            </form>
+        </div>
+        <div class="comments">
+            <h2>Komentarze</h2>
+            <% comments.forEach(function(comment) { %>
+                <div class="comment">
+                    <p><strong>
+                            <%= comment.username %>:
+                        </strong>
+                        <%= comment.comment %>
+                    </p>
+                    <p><small>
+                            <%= comment.created_at.toLocaleString() %>
+                        </small></p>
+                </div>
+                <% }); %>
+                    <form action="/tickets/<%= ticket._id %>/comment" method="POST">
+                        <label for="comment">Dodaj komentarz:</label>
+                        <textarea id="comment" name="comment" required></textarea>
+                        <input type="hidden" name="username" value="<%= ticket.name %>">
+                        <button type="submit">Dodaj komentarz</button>
+                    </form>
+        </div>
+        <div class="history">
+            <h2>Historia</h2>
+            <% history.forEach(function(entry) { %>
+                <div class="entry">
+                    <p><strong>
+                            <%= entry.username %>:
+                        </strong>
+                        <%= entry.action %>
+                    </p>
+                    <p><small>
+                            <%= entry.created_at.toLocaleString() %>
+                        </small></p>
+                </div>
+                <% }); %>
+        </div>
+    </div>
+</body>
+
+</html>

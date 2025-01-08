@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel użytkownika - MedTicket 2.0</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #343a40;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            position: fixed;
+            height: 100%;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #495057;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar button:hover {
+            background-color: #6c757d;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            margin-left: 300px;
+            /* Adjusted to ensure content does not overlap with sidebar */
+            overflow-y: auto;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .ticket {
+            background-color: #e9ecef;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .menu-icons button span {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .tile {
+            display: inline-block;
+            width: 200px;
+            height: 200px;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f0f0f0;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 160px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2>Panel użytkownika</h2>
+        <button onclick="showSection('profile')"><span>👤</span> Profil</button>
+        <button onclick="showSection('change-password')"><span>🔒</span> Zmiana hasła</button>
+        <button onclick="showSection('in-progress')"><span>📋</span> Zlecenia w trakcie</button>
+        <button onclick="showSection('completed')"><span>✅</span> Zakończone zlecenia</button>
+        <button onclick="showSection('admin-panel')"><span>⚙️</span> Panel Admina</button>
+        <button onclick="showSection('orders')"><span>📦</span> Zlecenia</button>
+        <button onclick="showSection('statistics')"><span>📊</span> Statystyki</button>
+        <button onclick="showSection('communication')"><span>💬</span> Komunikacja</button>
+        <button onclick="showSection('documentation')"><span>📄</span> Dokumentacja</button>
+        <button onclick="showSection('settings')"><span>⚙️</span> Ustawienia</button>
+        <button onclick="location.href='/logout'"><span>🚪</span> Wyloguj się</button>
+    </div>
+    <div class="content">
+        <div id="profile" class="section">
+            <h2>Profil użytkownika</h2>
+            <form action="/user/update-profile" method="POST">
+                <label for="first-name">Imię:</label>
+                <input type="text" id="first-name" name="first-name" value="<%= user.firstName %>" required>
+                <label for="last-name">Nazwisko:</label>
+                <input type="text" id="last-name" name="last-name" value="<%= user.lastName %>" required>
+                <label for="username">Nazwa użytkownika:</label>
+                <input type="text" id="username" name="username" value="<%= user.username %>" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="<%= user.email %>" required>
+                <label for="phone">Telefon:</label>
+                <input type="text" id="phone" name="phone" value="<%= user.phone %>" required>
+                <button type="submit">Zaktualizuj profil</button>
+            </form>
+        </div>
+        <div id="change-password" class="section">
+            <h2>Zmiana hasła</h2>
+            <form action="/user/change-password" method="POST">
+                <label for="current-password">Obecne hasło:</label>
+                <input type="password" id="current-password" name="current-password" required>
+                <label for="new-password">Nowe hasło:</label>
+                <input type="password" id="new-password" name="new-password" required>
+                <button type="submit">Zmień hasło</button>
+            </form>
+        </div>
+        <div id="in-progress" class="section">
+            <h2>Zlecenia w trakcie</h2>
+            <% ticketsInProgress.forEach(ticket=> { %>
+                <div class="ticket">
+                    <p><strong>Temat:</strong>
+                        <%= ticket.title %>
+                    </p>
+                    <p><strong>Opis:</strong>
+                        <%= ticket.description %>
+                    </p>
+                    <p><strong>Status:</strong>
+                        <%= ticket.status %>
+                    </p>
+                </div>
+                <% }) %>
+        </div>
+        <div id="completed" class="section">
+            <h2>Zakończone zlecenia</h2>
+            <% ticketsCompleted.forEach(ticket=> { %>
+                <div class="ticket">
+                    <p><strong>Temat:</strong>
+                        <%= ticket.title %>
+                    </p>
+                    <p><strong>Opis:</strong>
+                        <%= ticket.description %>
+                    </p>
+                    <p><strong>Status:</strong>
+                        <%= ticket.status %>
+                    </p>
+                </div>
+                <% }) %>
+        </div>
+        <div id="admin-panel" class="section">
+            <h2>Panel Administratora</h2>
+            <div class="tile" onclick="location.href='/admin/import-contacts'">Importuj bibliotekę kontaktów</div>
+            <div class="tile" onclick="location.href='/admin/add-user'">Dodaj użytkownika</div>
+            <div class="tile" onclick="location.href='/admin/manage-users'">Zarządzaj użytkownikami</div>
+        </div>
+        <div id="orders" class="section">
+            <h2>Zlecenia</h2>
+            <!-- Zawartość sekcji Zlecenia -->
+        </div>
+        <div id="statistics" class="section">
+            <h2>Statystyki</h2>
+            <!-- Zawartość sekcji Statystyki -->
+        </div>
+        <div id="communication" class="section">
+            <h2>Komunikacja</h2>
+            <!-- Zawartość sekcji Komunikacja -->
+        </div>
+        <div id="documentation" class="section">
+            <h2>Dokumentacja</h2>
+            <!-- Zawartość sekcji Dokumentacja -->
+        </div>
+        <div id="settings" class="section">
+            <h2>Ustawienia</h2>
+            <!-- Zawartość sekcji Ustawienia -->
+        </div>
+    </div>
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById(sectionId).style.display = 'block';
+        }
+
+        // Show profile section by default
+        showSection('profile');
+    </script>
+</body>
+
+</html>
